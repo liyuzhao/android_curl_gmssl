@@ -597,6 +597,9 @@ int ASN1_OCTET_STRING_cmp(const ASN1_OCTET_STRING *a,
                           const ASN1_OCTET_STRING *b);
 int ASN1_OCTET_STRING_set(ASN1_OCTET_STRING *str, const unsigned char *data,
                           int len);
+#ifndef OPENSSL_NO_SM2
+int ASN1_OCTET_STRING_is_zero(const ASN1_OCTET_STRING *a);
+#endif
 
 DECLARE_ASN1_FUNCTIONS(ASN1_VISIBLESTRING)
 DECLARE_ASN1_FUNCTIONS(ASN1_UNIVERSALSTRING)
@@ -625,8 +628,8 @@ ASN1_TIME *ASN1_TIME_set(ASN1_TIME *s, time_t t);
 ASN1_TIME *ASN1_TIME_adj(ASN1_TIME *s, time_t t,
                          int offset_day, long offset_sec);
 int ASN1_TIME_check(const ASN1_TIME *t);
-ASN1_GENERALIZEDTIME *ASN1_TIME_to_generalizedtime(const ASN1_TIME *t,
-                                                   ASN1_GENERALIZEDTIME **out);
+ASN1_GENERALIZEDTIME *ASN1_TIME_to_generalizedtime(ASN1_TIME *t, ASN1_GENERALIZEDTIME
+                                                   **out);
 int ASN1_TIME_set_string(ASN1_TIME *s, const char *str);
 
 int i2a_ASN1_INTEGER(BIO *bp, const ASN1_INTEGER *a);
@@ -946,7 +949,6 @@ int ERR_load_ASN1_strings(void);
 # define ASN1_F_C2I_ASN1_INTEGER                          194
 # define ASN1_F_C2I_ASN1_OBJECT                           196
 # define ASN1_F_C2I_IBUF                                  226
-# define ASN1_F_C2I_UINT64_INT                            101
 # define ASN1_F_COLLECT_DATA                              140
 # define ASN1_F_D2I_ASN1_OBJECT                           147
 # define ASN1_F_D2I_ASN1_UINTEGER                         150
@@ -957,9 +959,12 @@ int ERR_load_ASN1_strings(void);
 # define ASN1_F_I2D_ASN1_BIO_STREAM                       211
 # define ASN1_F_I2D_DSA_PUBKEY                            161
 # define ASN1_F_I2D_EC_PUBKEY                             181
+# define ASN1_F_I2D_PAILLIER_PUBKEY                       101
 # define ASN1_F_I2D_PRIVATEKEY                            163
 # define ASN1_F_I2D_PUBLICKEY                             164
 # define ASN1_F_I2D_RSA_PUBKEY                            165
+# define ASN1_F_I2D_SM9_MASTER_PUBKEY                     105
+# define ASN1_F_I2D_SM9_PUBKEY                            112
 # define ASN1_F_LONG_C2I                                  166
 # define ASN1_F_OID_MODULE_INIT                           174
 # define ASN1_F_PARSE_TAGGING                             182
@@ -972,8 +977,6 @@ int ERR_load_ASN1_strings(void);
 # define ASN1_F_SMIME_READ_ASN1                           212
 # define ASN1_F_SMIME_TEXT                                213
 # define ASN1_F_STBL_MODULE_INIT                          223
-# define ASN1_F_UINT32_C2I                                105
-# define ASN1_F_UINT64_C2I                                112
 # define ASN1_F_X509_CRL_ADD0_REVOKED                     169
 # define ASN1_F_X509_INFO_NEW                             170
 # define ASN1_F_X509_NAME_ENCODE                          203

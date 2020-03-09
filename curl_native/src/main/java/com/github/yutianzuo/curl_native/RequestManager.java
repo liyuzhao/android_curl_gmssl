@@ -1,6 +1,8 @@
 package com.github.yutianzuo.curl_native;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,7 @@ public class RequestManager {
     }
 
     public void setCertPath(String strCert) {
+        Log.e("RequestManager", "setCertPath:" + strCert);
         JniCurl.setCertPath(seqHash, strCert);
     }
 

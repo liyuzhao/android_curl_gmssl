@@ -1,3 +1,4 @@
+
 /*
  * Copyright 1995-2016 The OpenSSL Project Authors. All Rights Reserved.
  *
@@ -26,14 +27,28 @@
 # include <openssl/asn1.h>
 # include <openssl/safestack.h>
 # include <openssl/ec.h>
-
-# if OPENSSL_API_COMPAT < 0x10100000L
-#  include <openssl/rsa.h>
-#  include <openssl/dsa.h>
-#  include <openssl/dh.h>
+# ifndef OPENSSL_NO_PAILLIER
+#  include <openssl/paillier.h>
+# endif
+# ifndef OPENSSL_NO_SM9
+#  include <openssl/sm9.h>
 # endif
 
-# include <openssl/sha.h>
+# if OPENSSL_API_COMPAT < 0x10100000L
+#  ifndef OPENSSL_NO_RSA
+#   include <openssl/rsa.h>
+#  endif
+#  ifndef OPENSSL_NO_DSA
+#  include <openssl/dsa.h>
+#  endif
+#  ifndef OPENSSL_NO_DH
+#  include <openssl/dh.h>
+#  endif
+# endif
+
+# ifndef OPENSSL_NO_SHA
+#  include <openssl/sha.h>
+# endif
 
 #ifdef  __cplusplus
 extern "C" {
@@ -393,6 +408,16 @@ int i2d_RSAPublicKey_fp(FILE *fp, RSA *rsa);
 RSA *d2i_RSA_PUBKEY_fp(FILE *fp, RSA **rsa);
 int i2d_RSA_PUBKEY_fp(FILE *fp, RSA *rsa);
 #  endif
+#  ifndef OPENSSL_NO_PAILLIER
+/*
+PAILLIER *d2i_PaillierPrivateKey_fp(FILE *fp, PAILLIER **paillier);
+int i2d_PaillierPrivateKey_fp(FILE *fp, PAILLIER *paillier);
+PAILLIER *d2i_PaillierPublicKey_fp(FILE *fp, PAILLIER **paillier);
+int i2d_PaillierPublicKey_fp(FILE *fp, PAILLIER *paillier);
+PAILLIER *d2i_PAILLIER_PUBKEY_fp(FILE *fp, PAILLIER **paillier);
+int i2d_PAILLIER_PUBKEY_fp(FILE *fp, PAILLIER *paillier);
+*/
+#  endif
 #  ifndef OPENSSL_NO_DSA
 DSA *d2i_DSA_PUBKEY_fp(FILE *fp, DSA **dsa);
 int i2d_DSA_PUBKEY_fp(FILE *fp, DSA *dsa);
@@ -430,6 +455,16 @@ RSA *d2i_RSAPublicKey_bio(BIO *bp, RSA **rsa);
 int i2d_RSAPublicKey_bio(BIO *bp, RSA *rsa);
 RSA *d2i_RSA_PUBKEY_bio(BIO *bp, RSA **rsa);
 int i2d_RSA_PUBKEY_bio(BIO *bp, RSA *rsa);
+#  endif
+#  ifndef OPENSSL_NO_PAILLIER
+/*
+PAILLIER *d2i_PaillierPrivateKey_bio(BIO *bp, PAILLIER **paillier);
+int i2d_PaillierPrivateKey_bio(BIO *bp, PAILLIER *paillier);
+PAILLIER *d2i_PaillierPublicKey_bio(BIO *bp, PAILLIER **paillier);
+int i2d_PaillierPublicKey_bio(BIO *bp, PAILLIER *paillier);
+PAILLIER *d2i_PAILLIER_PUBKEY_bio(BIO *bp, PAILLIER **paillier);
+int i2d_PAILLIER_PUBKEY_bio(BIO *bp, PAILLIER *paillier);
+*/
 #  endif
 #  ifndef OPENSSL_NO_DSA
 DSA *d2i_DSA_PUBKEY_bio(BIO *bp, DSA **dsa);
@@ -513,6 +548,17 @@ DSA *d2i_DSA_PUBKEY(DSA **a, const unsigned char **pp, long length);
 int i2d_EC_PUBKEY(EC_KEY *a, unsigned char **pp);
 EC_KEY *d2i_EC_PUBKEY(EC_KEY **a, const unsigned char **pp, long length);
 # endif
+# ifndef OPENSSL_NO_PAILLIER
+int i2d_PAILLIER_PUBKEY(PAILLIER *a, unsigned char **pp);
+PAILLIER *d2i_PAILLIER_PUBKEY(PAILLIER **a, const unsigned char **pp, long length);
+# endif
+# ifndef OPENSSL_NO_SM9
+int i2d_SM9_MASTER_PUBKEY(SM9_MASTER_KEY *a, unsigned char **pp);
+SM9_MASTER_KEY *d2i_SM9_MASTER_PUBKEY(SM9_MASTER_KEY **a, const unsigned char **pp, long length);
+int i2d_SM9_PUBKEY(SM9_KEY *a, unsigned char **pp);
+SM9_KEY *d2i_SM9_PUBKEY(SM9_KEY **a, const unsigned char **pp, long length);
+# endif
+
 
 DECLARE_ASN1_FUNCTIONS(X509_SIG)
 void X509_SIG_get0(const X509_SIG *sig, const X509_ALGOR **palg,
@@ -641,7 +687,7 @@ int X509_get_signature_type(const X509 *x);
 
 /*
  * This one is only used so that a binary form can output, as in
- * i2d_X509_NAME(X509_get_X509_PUBKEY(x), &buf)
+ * i2d_X509_NAME(X509_get_X509_PUBKEY(x),&buf)
  */
 X509_PUBKEY *X509_get_X509_PUBKEY(const X509 *x);
 const STACK_OF(X509_EXTENSION) *X509_get0_extensions(const X509 *x);

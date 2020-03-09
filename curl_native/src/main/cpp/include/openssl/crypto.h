@@ -174,7 +174,7 @@ typedef void CRYPTO_EX_new (void *parent, void *ptr, CRYPTO_EX_DATA *ad,
 typedef void CRYPTO_EX_free (void *parent, void *ptr, CRYPTO_EX_DATA *ad,
                              int idx, long argl, void *argp);
 typedef int CRYPTO_EX_dup (CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
-                           void *from_d, int idx, long argl, void *argp);
+                           void *srcp, int idx, long argl, void *argp);
 __owur int CRYPTO_get_ex_new_index(int class_index, long argl, void *argp,
                             CRYPTO_EX_new *new_func, CRYPTO_EX_dup *dup_func,
                             CRYPTO_EX_free *free_func);
@@ -215,7 +215,11 @@ void *CRYPTO_get_ex_data(const CRYPTO_EX_DATA *ad, int idx);
  * On the other hand, the locking callbacks are no longer used.  Consequently,
  * the callback management functions can be safely replaced with no-op macros.
  */
-#  define CRYPTO_num_locks()            (1)
+#  if OPENSSL_API_COMPAT < 0x10100000L
+int CRYPTO_num_locks(void);
+#  else
+#   define CRYPTO_num_locks()                    (1)
+#  endif
 #  define CRYPTO_set_locking_callback(func)
 #  define CRYPTO_get_locking_callback()         (NULL)
 #  define CRYPTO_set_add_lock_callback(func)
@@ -367,6 +371,8 @@ int CRYPTO_memcmp(const volatile void * volatile in_a,
 # define OPENSSL_INIT_ENGINE_CAPI            0x00002000L
 # define OPENSSL_INIT_ENGINE_PADLOCK         0x00004000L
 # define OPENSSL_INIT_ENGINE_AFALG           0x00008000L
+# define OPENSSL_INIT_ENGINE_SKF             0x00020000L
+# define OPENSSL_INIT_ENGINE_SDF             0x00040000L
 /* OPENSSL_INIT flag 0x00010000 reserved for internal use */
 /* OPENSSL_INIT flag range 0xfff00000 reserved for OPENSSL_init_ssl() */
 /* Max OPENSSL_INIT flag value is 0x80000000 */
@@ -374,6 +380,7 @@ int CRYPTO_memcmp(const volatile void * volatile in_a,
 /* openssl and dasync not counted as builtin */
 # define OPENSSL_INIT_ENGINE_ALL_BUILTIN \
     (OPENSSL_INIT_ENGINE_RDRAND | OPENSSL_INIT_ENGINE_DYNAMIC \
+    | OPENSSL_INIT_ENGINE_SKF | OPENSSL_INIT_ENGINE_SDF \
     | OPENSSL_INIT_ENGINE_CRYPTODEV | OPENSSL_INIT_ENGINE_CAPI | \
     OPENSSL_INIT_ENGINE_PADLOCK)
 

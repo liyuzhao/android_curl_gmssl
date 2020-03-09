@@ -7,6 +7,7 @@
 
 #include "curl.h"
 #include <string>
+#include "../android_utils.h"
 
 
 typedef void(*CallBackFunc)(int, const std::string &, float, size_t, int, void *);
@@ -91,7 +92,7 @@ public:
             return;
         }
         curl_easy_setopt(m_curl_handle, CURLOPT_URL, str_url.c_str());
-
+        LOGE("skip_ssl:%d", skip_ssl);
         if (skip_ssl)
         {
             curl_easy_setopt(m_curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
@@ -99,8 +100,10 @@ public:
         }
         else
         {
+//            curl_easy_setopt(m_curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
             if (!m_cert_path.empty())
             {
+                LOGE("m_cert_path:%s", m_cert_path.c_str());
                 curl_easy_setopt(m_curl_handle, CURLOPT_CAINFO, m_cert_path.c_str());
             }
         }

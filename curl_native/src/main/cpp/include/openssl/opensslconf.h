@@ -55,6 +55,9 @@ extern "C" {
 #ifndef OPENSSL_NO_FUZZ_LIBFUZZER
 # define OPENSSL_NO_FUZZ_LIBFUZZER
 #endif
+#ifndef OPENSSL_NO_GMIENG
+# define OPENSSL_NO_GMIENG
+#endif
 #ifndef OPENSSL_NO_HEARTBEATS
 # define OPENSSL_NO_HEARTBEATS
 #endif
@@ -63,6 +66,12 @@ extern "C" {
 #endif
 #ifndef OPENSSL_NO_SCTP
 # define OPENSSL_NO_SCTP
+#endif
+#ifndef OPENSSL_NO_SDFENG
+# define OPENSSL_NO_SDFENG
+#endif
+#ifndef OPENSSL_NO_SKFENG
+# define OPENSSL_NO_SKFENG
 #endif
 #ifndef OPENSSL_NO_SSL_TRACE
 # define OPENSSL_NO_SSL_TRACE

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class JniCurl {
     static {
-        System.loadLibrary("native_net");
+        System.loadLibrary("easemob");
     }
 
     public static native void init(int threadPoolSize, Object callBack);

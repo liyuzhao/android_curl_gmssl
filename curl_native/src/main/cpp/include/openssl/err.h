@@ -93,6 +93,14 @@ typedef struct err_state_st {
 # define ERR_LIB_CT              50
 # define ERR_LIB_ASYNC           51
 # define ERR_LIB_KDF             52
+# define ERR_LIB_KDF2            53
+# define ERR_LIB_PAILLIER        55
+# define ERR_LIB_OTP             57
+# define ERR_LIB_GMAPI           58
+# define ERR_LIB_SM9             61
+# define ERR_LIB_SDF             63
+# define ERR_LIB_SKF             64
+# define ERR_LIB_SM2             66
 
 # define ERR_LIB_USER            128
 
@@ -131,6 +139,14 @@ typedef struct err_state_st {
 # define CTerr(f,r) ERR_PUT_error(ERR_LIB_CT,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
 # define ASYNCerr(f,r) ERR_PUT_error(ERR_LIB_ASYNC,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
 # define KDFerr(f,r) ERR_PUT_error(ERR_LIB_KDF,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define KDF2err(f,r) ERR_PUT_error(ERR_LIB_KDF2,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define PAILLIERerr(f,r) ERR_PUT_error(ERR_LIB_PAILLIER,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define OTPerr(f,r) ERR_PUT_error(ERR_LIB_OTP,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define GMAPIerr(f,r) ERR_PUT_error(ERR_LIB_GMAPI,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define SM2err(f,r) ERR_PUT_error(ERR_LIB_SM2,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define SM9err(f,r) ERR_PUT_error(ERR_LIB_SM9,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define SDFerr(f,r) ERR_PUT_error(ERR_LIB_SDF,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
+# define SKFerr(f,r) ERR_PUT_error(ERR_LIB_SKF,(f),(r),OPENSSL_FILE,OPENSSL_LINE)
 
 # define ERR_PACK(l,f,r) ( \
         (((unsigned int)(l) & 0x0FF) << 24L) | \
@@ -159,7 +175,6 @@ typedef struct err_state_st {
 # define SYS_F_GETSOCKOPT        15
 # define SYS_F_GETSOCKNAME       16
 # define SYS_F_GETHOSTBYNAME     17
-# define SYS_F_FFLUSH            18
 
 /* reasons */
 # define ERR_R_SYS_LIB   ERR_LIB_SYS/* 2 */
@@ -179,6 +194,16 @@ typedef struct err_state_st {
 # define ERR_R_X509V3_LIB ERR_LIB_X509V3/* 34 */
 # define ERR_R_ENGINE_LIB ERR_LIB_ENGINE/* 38 */
 # define ERR_R_ECDSA_LIB ERR_LIB_ECDSA/* 42 */
+# define ERR_R_KDF2_LIB  ERR_LIB_KDF2/* 53 */
+# define ERR_R_PAILLIER_LIB ERR_LIB_PAILLIER/* 55 */
+# define ERR_R_OTP_LIB  ERR_LIB_OTP/* 57 */
+# define ERR_R_GMAPI_LIB  ERR_LIB_GMAPI/* 58 */
+# define ERR_R_SM2_LIB  ERR_LIB_SM2/* 66 */
+# define ERR_R_SM9_LIB  ERR_LIB_SM9/* 61 */
+# define ERR_R_SDF_LIB  ERR_LIB_SDF/* 63 */
+# define ERR_R_SKF_LIB  ERR_LIB_SKF/* 64 */
+
+# define ERR_R_NESTED_ASN1_ERROR                 58
 
 # define ERR_R_NESTED_ASN1_ERROR                 58
 # define ERR_R_MISSING_ASN1_EOS                  63
@@ -252,6 +277,8 @@ int ERR_get_next_error_library(void);
 
 int ERR_set_mark(void);
 int ERR_pop_to_mark(void);
+
+#define OPENSSL_PUT_ERROR(a,b)  do {} while(0)
 
 #ifdef  __cplusplus
 }

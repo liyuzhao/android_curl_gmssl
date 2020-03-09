@@ -1,3 +1,51 @@
+/* ====================================================================
+ * Copyright (c) 2014 - 2018 The GmSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the GmSSL Project.
+ *    (http://gmssl.org/)"
+ *
+ * 4. The name "GmSSL Project" must not be used to endorse or promote
+ *    products derived from this software without prior written
+ *    permission. For written permission, please contact
+ *    guanzhi1980@gmail.com.
+ *
+ * 5. Products derived from this software may not be called "GmSSL"
+ *    nor may "GmSSL" appear in their names without prior written
+ *    permission of the GmSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the GmSSL Project
+ *    (http://gmssl.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE GmSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE GmSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ */
 /*
  * Copyright 1995-2016 The OpenSSL Project Authors. All Rights Reserved.
  *
@@ -17,7 +65,7 @@
 
 # define EVP_MAX_MD_SIZE                 64/* longest known is SHA512 */
 # define EVP_MAX_KEY_LENGTH              64
-# define EVP_MAX_IV_LENGTH               16
+# define EVP_MAX_IV_LENGTH               32/* longest is ZUC256 (23) */
 # define EVP_MAX_BLOCK_LENGTH            32
 
 # define PKCS5_SALT_LEN                  8
@@ -50,8 +98,11 @@
 # define EVP_PKEY_EC     NID_X9_62_id_ecPublicKey
 # define EVP_PKEY_HMAC   NID_hmac
 # define EVP_PKEY_CMAC   NID_cmac
-# define EVP_PKEY_TLS1_PRF NID_tls1_prf
-# define EVP_PKEY_HKDF   NID_hkdf
+# define EVP_PKEY_TLS1_PRF   NID_tls1_prf
+# define EVP_PKEY_HKDF       NID_hkdf
+# define EVP_PKEY_PAILLIER   NID_paillier
+# define EVP_PKEY_SM9_MASTER NID_id_sm9MasterSecret
+# define EVP_PKEY_SM9        NID_id_sm9PublicKey
 
 #ifdef  __cplusplus
 extern "C" {
@@ -61,6 +112,9 @@ extern "C" {
 # define EVP_PKEY_MO_VERIFY      0x0002
 # define EVP_PKEY_MO_ENCRYPT     0x0004
 # define EVP_PKEY_MO_DECRYPT     0x0008
+
+char *EVP_get_ciphernames(int aliases);
+char *EVP_get_digestnames(int aliases);
 
 # ifndef EVP_MD
 EVP_MD *EVP_MD_meth_new(int md_type, int pkey_type);
@@ -379,22 +433,38 @@ typedef int (EVP_PBE_KEYGEN) (EVP_CIPHER_CTX *ctx, const char *pass,
 
 # ifndef OPENSSL_NO_RSA
 #  define EVP_PKEY_assign_RSA(pkey,rsa) EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\
-                                        (char *)(rsa))
+                                         (char *)(rsa))
 # endif
 
 # ifndef OPENSSL_NO_DSA
 #  define EVP_PKEY_assign_DSA(pkey,dsa) EVP_PKEY_assign((pkey),EVP_PKEY_DSA,\
-                                        (char *)(dsa))
+                                         (char *)(dsa))
 # endif
 
 # ifndef OPENSSL_NO_DH
 #  define EVP_PKEY_assign_DH(pkey,dh) EVP_PKEY_assign((pkey),EVP_PKEY_DH,\
-                                        (char *)(dh))
+                                         (char *)(dh))
 # endif
 
 # ifndef OPENSSL_NO_EC
 #  define EVP_PKEY_assign_EC_KEY(pkey,eckey) EVP_PKEY_assign((pkey),EVP_PKEY_EC,\
-                                        (char *)(eckey))
+                                         (char *)(eckey))
+# endif
+
+# ifndef OPENSSL_NO_PAILLIER
+#  define EVP_PKEY_assign_PAILLIER(pkey,paillier) EVP_PKEY_assign((pkey),EVP_PKEY_PAILLIER,\
+                                        (char *)(paillier))
+# endif
+
+# ifndef OPENSSL_NO_SM9
+#  define EVP_PKEY_assign_SM9_MASTER(pkey,sm9) EVP_PKEY_assign((pkey),EVP_PKEY_SM9_MASTER,\
+                                        (char *)(sm9))
+#  define EVP_PKEY_assign_SM9(pkey,sm9) EVP_PKEY_assign((pkey),EVP_PKEY_SM9,\
+                                        (char *)(sm9))
+#  define EVP_PKEY_assign_SM9MasterSecret(pkey,sm9) EVP_PKEY_assign_SM9_MASTER(pkey,sm9)
+#  define EVP_PKEY_assign_SM9PublicParameters(pkey,sm9) EVP_PKEY_assign_SM9_MASTER(pkey,sm9)
+#  define EVP_PKEY_assign_SM9PrivateKey(pkey,sm9) EVP_PKEY_assign_SM9(pkey,sm9)
+#  define EVP_PKEY_assign_SM9PublicKey(pkey,sm9) EVP_PKEY_assign_SM9(pkey,sm9)
 # endif
 
 /* Add some extra combinations */
@@ -422,6 +492,7 @@ void EVP_MD_CTX_set_update_fn(EVP_MD_CTX *ctx,
 # define EVP_MD_CTX_type(e)              EVP_MD_type(EVP_MD_CTX_md(e))
 EVP_PKEY_CTX *EVP_MD_CTX_pkey_ctx(const EVP_MD_CTX *ctx);
 void *EVP_MD_CTX_md_data(const EVP_MD_CTX *ctx);
+void *EVP_MD_CTX_set_md_data(EVP_MD_CTX *ctx, void *md_data);
 
 int EVP_CIPHER_nid(const EVP_CIPHER *cipher);
 # define EVP_CIPHER_name(e)              OBJ_nid2sn(EVP_CIPHER_nid(e))
@@ -474,11 +545,11 @@ void BIO_set_md(BIO *, const EVP_MD *md);
 # else
 #  define BIO_set_md(b,md)               BIO_ctrl(b,BIO_C_SET_MD,0,(char *)md)
 # endif
-# define BIO_get_md(b,mdp)               BIO_ctrl(b,BIO_C_GET_MD,0,(char *)mdp)
-# define BIO_get_md_ctx(b,mdcp)     BIO_ctrl(b,BIO_C_GET_MD_CTX,0,(char *)mdcp)
-# define BIO_set_md_ctx(b,mdcp)     BIO_ctrl(b,BIO_C_SET_MD_CTX,0,(char *)mdcp)
-# define BIO_get_cipher_status(b)        BIO_ctrl(b,BIO_C_GET_CIPHER_STATUS,0,NULL)
-# define BIO_get_cipher_ctx(b,c_pp)      BIO_ctrl(b,BIO_C_GET_CIPHER_CTX,0,(char *)c_pp)
+# define BIO_get_md(b,mdp)              BIO_ctrl(b,BIO_C_GET_MD,0,(char *)mdp)
+# define BIO_get_md_ctx(b,mdcp)         BIO_ctrl(b,BIO_C_GET_MD_CTX,0,(char *)mdcp)
+# define BIO_set_md_ctx(b,mdcp)         BIO_ctrl(b,BIO_C_SET_MD_CTX,0,(char *)mdcp)
+# define BIO_get_cipher_status(b)       BIO_ctrl(b,BIO_C_GET_CIPHER_STATUS,0,NULL)
+# define BIO_get_cipher_ctx(b,c_pp)     BIO_ctrl(b,BIO_C_GET_CIPHER_CTX,0,(char *)c_pp)
 
 /*__owur*/ int EVP_Cipher(EVP_CIPHER_CTX *c,
                           unsigned char *out,
@@ -671,6 +742,12 @@ const EVP_MD *EVP_ripemd160(void);
 # ifndef OPENSSL_NO_WHIRLPOOL
 const EVP_MD *EVP_whirlpool(void);
 # endif
+# ifndef OPENSSL_NO_SM3
+const EVP_MD *EVP_sm3(void);
+#  ifndef OPENSSL_NO_SM9
+const EVP_MD *EVP_sm9hash2_sm3(void);
+#  endif
+# endif
 const EVP_CIPHER *EVP_enc_null(void); /* does nothing :-) */
 # ifndef OPENSSL_NO_DES
 const EVP_CIPHER *EVP_des_ecb(void);
@@ -838,36 +915,65 @@ const EVP_CIPHER *EVP_seed_cfb128(void);
 const EVP_CIPHER *EVP_seed_ofb(void);
 # endif
 
+# ifndef OPENSSL_NO_SMS4
+const EVP_CIPHER *EVP_sms4_ecb(void);
+const EVP_CIPHER *EVP_sms4_cbc(void);
+const EVP_CIPHER *EVP_sms4_cfb1(void);
+const EVP_CIPHER *EVP_sms4_cfb8(void);
+const EVP_CIPHER *EVP_sms4_cfb128(void);
+#  define EVP_sms4_cfb EVP_sms4_cfb128
+const EVP_CIPHER *EVP_sms4_ofb(void);
+const EVP_CIPHER *EVP_sms4_ctr(void);
+const EVP_CIPHER *EVP_sms4_gcm(void);
+const EVP_CIPHER *EVP_sms4_ccm(void);
+const EVP_CIPHER *EVP_sms4_ocb(void);
+const EVP_CIPHER *EVP_sms4_xts(void);
+const EVP_CIPHER *EVP_sms4_wrap(void);
+const EVP_CIPHER *EVP_sms4_wrap_pad(void);
+#  define EVP_sm4_ecb EVP_sms4_ecb
+#  define EVP_sm4_cbc EVP_sms4_cbc
+#  define EVP_sm4_cfb EVP_sms4_cfb
+#  define EVP_sm4_ofb EVP_sms4_ofb
+# endif
+
+# ifndef OPENSSL_NO_ZUC
+const EVP_CIPHER *EVP_zuc(void);
+const EVP_CIPHER *EVP_zuc256(void);
+# endif
+
 # if OPENSSL_API_COMPAT < 0x10100000L
 #  define OPENSSL_add_all_algorithms_conf() \
-    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
+        OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
                         | OPENSSL_INIT_ADD_ALL_DIGESTS \
                         | OPENSSL_INIT_LOAD_CONFIG, NULL)
 #  define OPENSSL_add_all_algorithms_noconf() \
-    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
+        OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
                         | OPENSSL_INIT_ADD_ALL_DIGESTS, NULL)
 
 #  ifdef OPENSSL_LOAD_CONF
 #   define OpenSSL_add_all_algorithms() \
-    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
+      OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
                         | OPENSSL_INIT_ADD_ALL_DIGESTS \
                         | OPENSSL_INIT_LOAD_CONFIG, NULL)
 #  else
 #   define OpenSSL_add_all_algorithms() \
-    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
+      OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS \
                         | OPENSSL_INIT_ADD_ALL_DIGESTS, NULL)
 #  endif
 
 #  define OpenSSL_add_all_ciphers() \
-    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS, NULL)
+     OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS, NULL)
 #  define OpenSSL_add_all_digests() \
-    OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_DIGESTS, NULL)
+     OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_DIGESTS, NULL)
 
 #  define EVP_cleanup() while(0) continue
-# endif
+# endif /* OPENSSL_API_COMPAT < 0x10100000L */
 
 int EVP_add_cipher(const EVP_CIPHER *cipher);
 int EVP_add_digest(const EVP_MD *digest);
+
+const EVP_CIPHER *EVP_get_default_cipher(void);
+const EVP_MD *EVP_get_default_digest(void);
 
 const EVP_CIPHER *EVP_get_cipherbyname(const char *name);
 const EVP_MD *EVP_get_digestbyname(const char *name);
@@ -928,6 +1034,34 @@ int EVP_PKEY_set1_EC_KEY(EVP_PKEY *pkey, struct ec_key_st *key);
 struct ec_key_st *EVP_PKEY_get0_EC_KEY(EVP_PKEY *pkey);
 struct ec_key_st *EVP_PKEY_get1_EC_KEY(EVP_PKEY *pkey);
 # endif
+# ifndef OPENSSL_NO_PAILLIER
+struct paillier_st;
+int EVP_PKEY_set1_PAILLIER(EVP_PKEY *pkey, struct paillier_st *key);
+struct paillier_st *EVP_PKEY_get0_PAILLIER(EVP_PKEY *pkey);
+struct paillier_st *EVP_PKEY_get1_PAILLIER(EVP_PKEY *pkey);
+# endif
+# ifndef OPENSSL_NO_SM9
+struct SM9_MASTER_KEY_st;
+int EVP_PKEY_set1_SM9_MASTER(EVP_PKEY *pkey, struct SM9_MASTER_KEY_st *key);
+struct SM9_MASTER_KEY_st *EVP_PKEY_get0_SM9_MASTER(EVP_PKEY *pkey);
+struct SM9_MASTER_KEY_st *EVP_PKEY_get1_SM9_MASTER(EVP_PKEY *pkey);
+#define EVP_PKEY_set1_SM9MasterSecret(pk,k) EVP_PKEY_set1_SM9_MASTER(pk,k)
+#define EVP_PKEY_get0_SM9MasterSecret(pk) EVP_PKEY_get0_SM9_MASTER(pk)
+#define EVP_PKEY_get1_SM9MasterSecret(pk) EVP_PKEY_get1_SM9_MASTER(pk)
+#define EVP_PKEY_set1_SM9PublicParameters(pk,k) EVP_PKEY_set1_SM9_MASTER(pk,k)
+#define EVP_PKEY_get0_SM9PublicParameters(pk) EVP_PKEY_get0_SM9_MASTER(pk)
+#define EVP_PKEY_get1_SM9PublicParameters(pk) EVP_PKEY_get1_SM9_MASTER(pk)
+struct SM9_KEY_st;
+int EVP_PKEY_set1_SM9(EVP_PKEY *pkey, struct SM9_KEY_st *key);
+struct SM9_KEY_st *EVP_PKEY_get0_SM9(EVP_PKEY *pkey);
+struct SM9_KEY_st *EVP_PKEY_get1_SM9(EVP_PKEY *pkey);
+#define EVP_PKEY_set1_SM9PrivateKey(pk,k) EVP_PKEY_set1_SM9(pk,k)
+#define EVP_PKEY_get0_SM9PrivateKey(pk,k) EVP_PKEY_get0_SM9(pk)
+#define EVP_PKEY_get1_SM9PrivateKey(pk,k) EVP_PKEY_get1_SM9(pk)
+#define EVP_PKEY_set1_SM9PublicKey(pk,k) EVP_PKEY_set1_SM9(pk,k)
+#define EVP_PKEY_get0_SM9PublicKey(pk,k) EVP_PKEY_get0_SM9(pk)
+#define EVP_PKEY_get1_SM9PublicKey(pk,k) EVP_PKEY_get1_SM9(pk)
+# endif
 
 EVP_PKEY *EVP_PKEY_new(void);
 int EVP_PKEY_up_ref(EVP_PKEY *pkey);
@@ -977,9 +1111,11 @@ int EVP_CIPHER_get_asn1_iv(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
 int PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
                        ASN1_TYPE *param, const EVP_CIPHER *cipher,
                        const EVP_MD *md, int en_de);
+#ifndef OPENSSL_NO_SHA
 int PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
                            const unsigned char *salt, int saltlen, int iter,
                            int keylen, unsigned char *out);
+#endif
 int PKCS5_PBKDF2_HMAC(const char *pass, int passlen,
                       const unsigned char *salt, int saltlen, int iter,
                       const EVP_MD *digest, int keylen, unsigned char *out);
@@ -1140,15 +1276,15 @@ void EVP_PKEY_asn1_set_security_bits(EVP_PKEY_ASN1_METHOD *ameth,
 # define EVP_PKEY_OP_TYPE_GEN \
                 (EVP_PKEY_OP_PARAMGEN | EVP_PKEY_OP_KEYGEN)
 
-# define  EVP_PKEY_CTX_set_signature_md(ctx, md) \
+# define EVP_PKEY_CTX_set_signature_md(ctx, md) \
                 EVP_PKEY_CTX_ctrl(ctx, -1, EVP_PKEY_OP_TYPE_SIG,  \
                                         EVP_PKEY_CTRL_MD, 0, (void *)md)
 
-# define  EVP_PKEY_CTX_get_signature_md(ctx, pmd)        \
+# define EVP_PKEY_CTX_get_signature_md(ctx, pmd)        \
                 EVP_PKEY_CTX_ctrl(ctx, -1, EVP_PKEY_OP_TYPE_SIG,  \
                                         EVP_PKEY_CTRL_GET_MD, 0, (void *)pmd)
 
-# define  EVP_PKEY_CTX_set_mac_key(ctx, key, len)        \
+# define EVP_PKEY_CTX_set_mac_key(ctx, key, len)        \
                 EVP_PKEY_CTX_ctrl(ctx, -1, EVP_PKEY_OP_KEYGEN,  \
                                   EVP_PKEY_CTRL_SET_MAC_KEY, len, (void *)key)
 
@@ -1442,6 +1578,7 @@ void EVP_PKEY_meth_get_ctrl(EVP_PKEY_METHOD *pmeth,
 
 void EVP_add_alg_module(void);
 
+
 /* BEGIN ERROR CODES */
 /*
  * The following lines are auto generated by the script mkerr.pl. Any changes
@@ -1483,6 +1620,7 @@ int ERR_load_EVP_strings(void);
 # define EVP_F_EVP_PKCS82PKEY                             111
 # define EVP_F_EVP_PKEY2PKCS8                             113
 # define EVP_F_EVP_PKEY_COPY_PARAMETERS                   103
+# define EVP_F_EVP_PKEY_CTX_CIPHERTEXT_SIZE               168
 # define EVP_F_EVP_PKEY_CTX_CTRL                          137
 # define EVP_F_EVP_PKEY_CTX_CTRL_STR                      150
 # define EVP_F_EVP_PKEY_CTX_DUP                           156
@@ -1499,7 +1637,12 @@ int ERR_load_EVP_strings(void);
 # define EVP_F_EVP_PKEY_GET0_DSA                          120
 # define EVP_F_EVP_PKEY_GET0_EC_KEY                       131
 # define EVP_F_EVP_PKEY_GET0_HMAC                         183
+# define EVP_F_EVP_PKEY_GET0_PAILLIER                     172
 # define EVP_F_EVP_PKEY_GET0_RSA                          121
+# define EVP_F_EVP_PKEY_GET0_SM9                          176
+# define EVP_F_EVP_PKEY_GET0_SM9MASTERSECRET              173
+# define EVP_F_EVP_PKEY_GET0_SM9PUBLICPARAMETERS          174
+# define EVP_F_EVP_PKEY_GET0_SM9_MASTER                   175
 # define EVP_F_EVP_PKEY_KEYGEN                            146
 # define EVP_F_EVP_PKEY_KEYGEN_INIT                       147
 # define EVP_F_EVP_PKEY_NEW                               106
@@ -1543,12 +1686,17 @@ int ERR_load_EVP_strings(void);
 # define EVP_R_EXPECTING_A_DH_KEY                         128
 # define EVP_R_EXPECTING_A_DSA_KEY                        129
 # define EVP_R_EXPECTING_A_EC_KEY                         142
+# define EVP_R_EXPECTING_A_PAILLIER                       176
+# define EVP_R_EXPECTING_A_SM9_KEY                        180
+# define EVP_R_EXPECTING_A_SM9_MASTER_KEY                 181
+# define EVP_R_EXPECTING_A_SM9_MASTER_SECRET              179
 # define EVP_R_FIPS_MODE_NOT_SUPPORTED                    167
 # define EVP_R_ILLEGAL_SCRYPT_PARAMETERS                  171
 # define EVP_R_INITIALIZATION_ERROR                       134
 # define EVP_R_INPUT_NOT_INITIALIZED                      111
 # define EVP_R_INVALID_DIGEST                             152
 # define EVP_R_INVALID_FIPS_MODE                          168
+# define EVP_R_INVALID_INPUT_LENGTH                       164
 # define EVP_R_INVALID_KEY                                163
 # define EVP_R_INVALID_KEY_LENGTH                         130
 # define EVP_R_INVALID_OPERATION                          148
@@ -1557,6 +1705,7 @@ int ERR_load_EVP_strings(void);
 # define EVP_R_MESSAGE_DIGEST_IS_NULL                     159
 # define EVP_R_METHOD_NOT_SUPPORTED                       144
 # define EVP_R_MISSING_PARAMETERS                         103
+# define EVP_R_NO_AVAIABLE_DIGEST                         178
 # define EVP_R_NO_CIPHER_SET                              131
 # define EVP_R_NO_DEFAULT_DIGEST                          158
 # define EVP_R_NO_DIGEST_SET                              139
@@ -1568,6 +1717,8 @@ int ERR_load_EVP_strings(void);
 # define EVP_R_PRIVATE_KEY_DECODE_ERROR                   145
 # define EVP_R_PRIVATE_KEY_ENCODE_ERROR                   146
 # define EVP_R_PUBLIC_KEY_NOT_RSA                         106
+# define EVP_R_PUBLIC_KEY_NOT_RSA_OR_EC                   177
+# define EVP_R_RSA_PUBLIC_ENCRYPT_FAILED                  175
 # define EVP_R_UNKNOWN_CIPHER                             160
 # define EVP_R_UNKNOWN_DIGEST                             161
 # define EVP_R_UNKNOWN_OPTION                             169

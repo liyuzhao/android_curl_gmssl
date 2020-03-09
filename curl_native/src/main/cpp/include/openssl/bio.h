@@ -20,7 +20,11 @@
 # include <openssl/crypto.h>
 
 # ifndef OPENSSL_NO_SCTP
-#  include <openssl/e_os2.h>
+#  ifndef OPENSSL_SYS_VMS
+#   include <stdint.h>
+#  else
+#   include <inttypes.h>
+#  endif
 # endif
 
 #ifdef  __cplusplus
@@ -166,7 +170,7 @@ extern "C" {
 /*
  * This is used with memory BIOs:
  * BIO_FLAGS_MEM_RDONLY means we shouldn't free up or change the data in any way;
- * BIO_FLAGS_NONCLEAR_RST means we shouldn't clear data on reset.
+ * BIO_FLAGS_NONCLEAR_RST means we should't clear data on reset.
  */
 # define BIO_FLAGS_MEM_RDONLY    0x200
 # define BIO_FLAGS_NONCLEAR_RST  0x400
@@ -446,10 +450,10 @@ int BIO_read_filename(BIO *b, const char *name);
 /* defined in evp.h */
 /* #define BIO_set_md(b,md)     BIO_ctrl(b,BIO_C_SET_MD,1,(char *)md) */
 
-# define BIO_get_mem_data(b,pp)  BIO_ctrl(b,BIO_CTRL_INFO,0,(char *)pp)
-# define BIO_set_mem_buf(b,bm,c) BIO_ctrl(b,BIO_C_SET_BUF_MEM,c,(char *)bm)
-# define BIO_get_mem_ptr(b,pp)   BIO_ctrl(b,BIO_C_GET_BUF_MEM_PTR,0,(char *)pp)
-# define BIO_set_mem_eof_return(b,v) \
+#  define BIO_get_mem_data(b,pp)  BIO_ctrl(b,BIO_CTRL_INFO,0,(char *)pp)
+#  define BIO_set_mem_buf(b,bm,c) BIO_ctrl(b,BIO_C_SET_BUF_MEM,c,(char *)bm)
+#  define BIO_get_mem_ptr(b,pp)   BIO_ctrl(b,BIO_C_GET_BUF_MEM_PTR,0,(char *)pp)
+#  define BIO_set_mem_eof_return(b,v) \
                                 BIO_ctrl(b,BIO_C_SET_BUF_MEM_EOF_RETURN,v,NULL)
 
 /* For the BIO_f_buffer() type */

@@ -25,7 +25,7 @@ endif ()
 #add_definitions(-DENABLE_LOG)
 
 add_library( # Sets the name of the library.
-        native_net
+        easemob
 
         # Sets the library as a shared library.
         SHARED
@@ -158,7 +158,7 @@ endif ()
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        native_net
+        easemob
         libcurl
         libssl
         libcrypto

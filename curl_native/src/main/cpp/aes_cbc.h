@@ -67,8 +67,8 @@ std::string decrypt_aescbc(const unsigned char* entrytion_data, int len, std::st
     ctx = EVP_CIPHER_CTX_new();
     EVP_CipherInit_ex(ctx, EVP_aes_128_cbc(), NULL, NULL, NULL,
                       0); //decryption
-    OPENSSL_assert(EVP_CIPHER_CTX_key_length(ctx) == 16);
-    OPENSSL_assert(EVP_CIPHER_CTX_iv_length(ctx) == 16);
+//    OPENSSL_assert(EVP_CIPHER_CTX_key_length(ctx) == 16);
+//    OPENSSL_assert(EVP_CIPHER_CTX_iv_length(ctx) == 16);
     EVP_CipherInit_ex(ctx, NULL, NULL, (const unsigned char*)str_key.c_str(), (const unsigned char*)str_iv.c_str(), 0);
 //    EVP_CIPHER_CTX_set_padding(ctx, EVP_PADDING_PKCS7); //openssl default
     //assume buff is long enough
