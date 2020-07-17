@@ -48,3 +48,4 @@
 }
 
 -keep class com.easemob.emssl.* {*;}
+-keep class com.easemob.emssl.utils.EMMisc {*;}

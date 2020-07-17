@@ -9,6 +9,8 @@ keywords: android curl jni ndk https http gmsll
 关键字：安卓 curl jni ndk https https gmsll
 
 -----------------------------------------------------------------
+[![](https://jitpack.io/v/liyuzhao/android_curl_gmssl.svg)](https://jitpack.io/#liyuzhao/android_curl_gmssl)
+
 
 ### Step 1.
 Add it in your root build.gradle at the end of repositories:

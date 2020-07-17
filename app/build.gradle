@@ -56,6 +56,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation project(':curl_native')
-//    implementation 'com.github.liyuzhao:android_curl_gmssl:1.0.1'
+//    implementation 'com.github.liyuzhao:android_curl_gmssl:1.0.2'
     //implementation(name: 'curl_native-release', ext: 'aar')
 }
