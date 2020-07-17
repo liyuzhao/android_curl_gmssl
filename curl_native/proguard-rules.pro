@@ -47,7 +47,4 @@
     native <methods>;
 }
 
--keep class com.github.yutianzuo.curl_native.HttpManager{*;}
--keep class com.github.yutianzuo.curl_native.HttpCallback{*;}
--keep class com.github.yutianzuo.curl_native.RequestManager{*;}
--keep class com.github.yutianzuo.curl_native.utils.Misc{*;}
+-keep class com.easemob.emssl.* {*;}
