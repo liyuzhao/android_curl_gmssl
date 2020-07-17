@@ -204,6 +204,9 @@ Project_BINARY_DIR:STATIC=/Users/liyuzhao/others/mmm/gmForAndroid/android-curl/c
 //Value Computed by CMake
 Project_SOURCE_DIR:STATIC=/Users/liyuzhao/others/mmm/gmForAndroid/android-curl/curl_native
 
+//Dependencies for the target
+emssl_LIB_DEPENDS:STATIC=general;libcurl;general;libssl;general;libcrypto;general;z;general;log-lib-NOTFOUND;
+
 //Path to a library.
 log-lib:FILEPATH=log-lib-NOTFOUND
 

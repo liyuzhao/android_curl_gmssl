@@ -1,7 +1,3 @@
-//
-// Created by yutianzuo on 2017/9/26.
-//
-
 #ifndef JNIUTILSAS_ANDROID_UTILS_H
 #define JNIUTILSAS_ANDROID_UTILS_H
 

@@ -12,7 +12,9 @@
 
 typedef void(*CallBackFunc)(int, const std::string &, float, size_t, int, void *);
 
-template<typename Derive, typename CallBack = CallBackFunc>
+typedef void(*CookieCallBackFunc)(int, const std::string &, size_t, void *);
+
+template<typename Derive, typename CallBack = CallBackFunc, typename  CookieCallBack = CookieCallBackFunc>
 class HttpRequest
 {
 protected:
@@ -41,6 +43,17 @@ protected:
         return m_curl_handle != nullptr;
     }
 
+    std::string collectCookie(curl_slist *head) const {
+        std::string str_cookie;
+        curl_slist *p = head;
+        while(p) {
+            str_cookie.append(p->data)
+            .append(";");
+            p = p->next;
+        }
+        return str_cookie;
+    }
+
     void clear_headers()
     {
         if (m_headers)
@@ -52,11 +65,17 @@ protected:
 
     CallBack m_callback = nullptr;
 
+    CookieCallBack m_cookie_callback = nullptr;
+
     size_t m_request_seq;
 
     std::string m_cert_path;
 
     std::string m_proxy_path;
+
+    std::string m_cookie;
+
+    long m_httpcode = 0;
 
 public:
     enum
@@ -85,14 +104,16 @@ public:
         m_headers = curl_slist_append(m_headers, str_header.c_str());
     }
 
-    void set_url(const std::string &str_url, bool skip_ssl = false)
+    void set_url(const std::string &str_url, bool skip_ssl = true)
     {
         if (!is_valid())
         {
             return;
         }
         curl_easy_setopt(m_curl_handle, CURLOPT_URL, str_url.c_str());
-        LOGE("skip_ssl:%d", skip_ssl);
+        curl_easy_setopt(m_curl_handle,CURLOPT_COOKIEFILE,"");
+
+//        LOGE("skip_ssl:%d", skip_ssl);
         if (skip_ssl)
         {
             curl_easy_setopt(m_curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
@@ -134,6 +155,19 @@ public:
         }
     }
 
+    void set_cookie(const std::string& cookie)
+    {
+        m_cookie = cookie;
+        if (!is_valid())
+        {
+            return;
+        }
+        if (!m_cookie.empty()) {
+            curl_easy_setopt(m_curl_handle, CURLOPT_COOKIE, m_cookie.c_str());
+        }
+    }
+
+
     void set_cert(const std::string &cert_path)
     {
         m_cert_path = cert_path;
@@ -169,6 +203,20 @@ public:
         m_callback = call_back;
     }
 
+    void set_cookie_callback(CookieCallBack cookie_callback)
+    {
+        m_cookie_callback = cookie_callback;
+    }
+
+    long get_httpcode()
+    {
+        return m_httpcode;
+    }
+
+    std::string & get_res_txt()
+    {
+        return m_buffer;
+    }
 
     void go() const
     {
@@ -185,6 +233,16 @@ public:
         ret = curl_easy_perform(m_curl_handle);
         if (ret == CURLE_OK)
         {
+            if (m_cookie_callback) {
+                struct curl_slist *cookies = NULL;
+                curl_easy_getinfo(m_curl_handle, CURLINFO_COOKIELIST, &cookies); // 获取cookie数据
+                std::string str_cookie = collectCookie(cookies);
+                m_cookie_callback(RESULT_TYPE_SUCCEES_ALL, str_cookie,  m_request_seq, nullptr);
+            }
+
+
+            curl_easy_getinfo(m_curl_handle, CURLINFO_RESPONSE_CODE, &m_httpcode);
+
             //deal the respones m_buffer
             if (m_callback)
             {

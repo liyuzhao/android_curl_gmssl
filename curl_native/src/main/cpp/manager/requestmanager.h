@@ -14,6 +14,7 @@
 #include "../request/postrequest.h"
 #include "../request/downloadrequest.h"
 #include "../request/putrequest.h"
+#include "../request/deleterequest.h"
 
 class RequestManager
 {
@@ -70,6 +71,11 @@ public:
         m_proxy_path = str_proxy;
     }
 
+    void set_cookie(const std::string& str_cookie)
+    {
+        m_cookie = str_cookie;
+    }
+
     template<typename Callback>
     void get(const std::string &str_path, const STRING_MAP &headers,
              const STRING_MAP &url_params, Callback call_back, size_t seq)
@@ -80,6 +86,7 @@ public:
         get->set_url(str_url);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
+        get->set_cookie(m_cookie);
         get->set_callback(call_back);
         get->set_request_seq(seq);
 
@@ -89,6 +96,24 @@ public:
                                  delete get;
                              });
 
+    }
+
+    int get_ret(const std::string &str_path, const STRING_MAP &headers,
+             const STRING_MAP &url_params, std::string &str_res_txt)
+    {
+        HttpGetRequest *get = new HttpGetRequest();
+        inner_add_headers(get, headers);
+        std::string str_url = get_url(str_path, url_params);
+        get->set_url(str_url);
+        get->set_proxy(m_proxy_path);
+        get->set_cert(m_cert_path);
+        get->set_cookie(m_cookie);
+        get->go();
+        long http_code = get->get_httpcode();
+        str_res_txt = get->get_res_txt();
+        delete get;
+
+        return http_code;
     }
 
     template<typename Callback>
@@ -101,6 +126,7 @@ public:
         post->set_url(str_url);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         std::string str_form;
         for (CONST_STRING_MAP_IT it = form_params.begin(); it != form_params.end(); ++it)
@@ -117,6 +143,64 @@ public:
         post->set_postformdata(str_form);
         post->set_callback(call_back);
 
+        g_threadpool->commit([post]() -> void
+                             {
+                                 post->go();
+                                 delete post;
+                             });
+    }
+
+    template<typename Callback, typename CookieCallback>
+    void post_form(const std::string &str_path, const STRING_MAP &headers,
+                   const STRING_MAP &form_params, Callback call_back, size_t seq, CookieCallback cookie_callback)
+    {
+        HttpPostFormDataRequest *post = new HttpPostFormDataRequest(true);
+        inner_add_headers(post, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        post->set_url(str_url);
+        post->set_proxy(m_proxy_path);
+        post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
+        post->set_request_seq(seq);
+        std::string str_form;
+        for (CONST_STRING_MAP_IT it = form_params.begin(); it != form_params.end(); ++it)
+        {
+            str_form.append(it->first);
+            str_form.append("=");
+            str_form.append(it->second);
+            str_form.append("&");
+        }
+        if (str_form.size())
+        {
+            str_form.erase(str_form.size() - 1);
+        }
+        post->set_postformdata(str_form);
+        post->set_callback(call_back);
+        post->set_cookie_callback(cookie_callback);
+
+
+        g_threadpool->commit([post]() -> void
+                             {
+                                 post->go();
+                                 delete post;
+                             });
+    }
+
+    template<typename Callback, typename CookieCallback>
+    void post_json(const std::string &str_path, const STRING_MAP &headers,
+                   const std::string &json, Callback call_back, size_t seq, CookieCallback cookie_callback)
+    {
+        HttpPostFormDataRequest *post = new HttpPostFormDataRequest(false);
+        inner_add_headers(post, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        post->set_url(str_url);
+        post->set_proxy(m_proxy_path);
+        post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
+        post->set_request_seq(seq);
+        post->set_postformdata(json);
+        post->set_callback(call_back);
+        post->set_cookie_callback(cookie_callback);
 
         g_threadpool->commit([post]() -> void
                              {
@@ -135,6 +219,7 @@ public:
         post->set_url(str_url);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         post->set_postformdata(json);
         post->set_callback(call_back);
@@ -145,6 +230,27 @@ public:
                                  delete post;
                              });
     }
+
+    int post_json_ret(const std::string &str_path, const STRING_MAP &headers,
+                   const std::string &json, std::string &str_res_txt)
+    {
+        HttpPostFormDataRequest *post = new HttpPostFormDataRequest(false);
+        inner_add_headers(post, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        post->set_url(str_url);
+        post->set_proxy(m_proxy_path);
+        post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
+        post->set_postformdata(json);
+        post->go();
+
+        long http_code = post->get_httpcode();
+        str_res_txt = post->get_res_txt();
+        delete post;
+
+        return http_code;
+    }
+
 
     template<typename Callback>
     void post_file(const std::string &str_path, const STRING_MAP &headers,
@@ -159,6 +265,7 @@ public:
         post->set_url(str_url); //should be invoke first
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         if (str_filepath.size())
         {
@@ -194,6 +301,56 @@ public:
     }
 
     template<typename Callback>
+    int post_file_ret(const std::string &str_path, const STRING_MAP &headers,
+                   const std::string &str_formname, const STRING_MAP &form_params,
+                   const std::string &str_jsonname, const std::string json,
+                   const std::string &str_filekeyname, const std::string &str_filename,
+                   const std::string &str_filepath, Callback call_back, size_t seq, std::string &str_res_txt)
+    {
+        HttpPostFileRequest *post = new HttpPostFileRequest();
+        inner_add_headers(post, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        post->set_url(str_url); //should be invoke first
+        post->set_proxy(m_proxy_path);
+        post->set_cert(m_cert_path);
+        post->set_cookie(m_cookie);
+        post->set_request_seq(seq);
+        if (str_filepath.size())
+        {
+            post->set_filepath(str_filekeyname, str_filepath, str_filename, true);
+        }
+        if (form_params.size())
+        {
+            std::string str_form;
+            for (CONST_STRING_MAP_IT it = form_params.begin(); it != form_params.end(); ++it)
+            {
+                str_form.append(it->first);
+                str_form.append("=");
+                str_form.append(it->second);
+                str_form.append("&");
+            }
+            if (str_form.size())
+            {
+                str_form.erase(str_form.size() - 1);
+            }
+            post->set_formdata(str_formname, str_form);
+        }
+        if (json.size())
+        {
+            post->set_jsondata(str_jsonname, json);
+        }
+        post->set_callback(call_back);
+
+        post->go();
+
+        long http_code = post->get_httpcode();
+        str_res_txt = post->get_res_txt();
+        delete post;
+
+        return http_code;
+    }
+
+    template<typename Callback>
     void put(const std::string &str_path, const std::string json,
              const STRING_MAP &headers, Callback callback, size_t seq
     )
@@ -205,6 +362,7 @@ public:
         put->set_proxy(m_proxy_path);
         put->set_json(json);
         put->set_cert(m_cert_path);
+        put->set_cookie(m_cookie);
         put->set_callback(callback);
         put->set_request_seq(seq);
 
@@ -214,6 +372,72 @@ public:
                                  delete put;
                              });
     }
+
+    int put_ret(const std::string &str_path, const std::string json,
+             const STRING_MAP &headers, std::string &str_res_txt
+    )
+    {
+        HttpPutJsonRequest *put = new HttpPutJsonRequest();
+        inner_add_headers(put, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        put->set_url(str_url);
+        put->set_proxy(m_proxy_path);
+        put->set_json(json);
+        put->set_cert(m_cert_path);
+        put->set_cookie(m_cookie);
+        put->go();
+        long httpcode = put->get_httpcode();
+        str_res_txt = put->get_res_txt();
+        delete put;
+
+        return httpcode;
+    }
+
+
+
+    template<typename Callback>
+    void deleteMethod(const std::string &str_path, const std::string json,
+            const STRING_MAP &headers, Callback callback, size_t seq
+    )
+    {
+        HttpDeleteRequest *del = new HttpDeleteRequest();
+        inner_add_headers(del, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        del->set_url(str_url);
+        del->set_proxy(m_proxy_path);
+        del->set_json(json);
+        del->set_cert(m_cert_path);
+        del->set_cookie(m_cookie);
+        del->set_callback(callback);
+        del->set_request_seq(seq);
+
+        g_threadpool->commit([del]() -> void
+                             {
+                                 del->go();
+                                 delete del;
+                             });
+    }
+
+    int delete_ret(const std::string &str_path, const std::string json,
+                      const STRING_MAP &headers, std::string &str_res_txt
+    )
+    {
+        HttpDeleteRequest *del = new HttpDeleteRequest();
+        inner_add_headers(del, headers);
+        std::string str_url = get_url(str_path, STRING_MAP());
+        del->set_url(str_url);
+        del->set_proxy(m_proxy_path);
+        del->set_json(json);
+        del->set_cert(m_cert_path);
+        del->set_cookie(m_cookie);
+        del->go();
+        long httpcode = del->get_httpcode();
+        str_res_txt = del->get_res_txt();
+        delete del;
+
+        return httpcode;
+    }
+
 
 
     template<typename Callback>
@@ -227,6 +451,7 @@ public:
         get->set_url(str_url);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
+        get->set_cookie(m_cookie);
         get->set_download_filepath(str_download_filepath);
         get->set_callback(callback);
         get->set_request_seq(seq);
@@ -236,6 +461,30 @@ public:
                                  get->go();
                                  delete get;
                              });
+    }
+
+
+    template<typename Callback>
+    int download_ret(const std::string &str_path, const STRING_MAP &headers, const STRING_MAP &url_params,
+                  const std::string &str_download_filepath,
+                  Callback callback, size_t seq, std::string &str_res_txt)
+    {
+        HttpGetDownloadRequest *get = new HttpGetDownloadRequest();
+        inner_add_headers(get, headers);
+        std::string str_url = get_url(str_path, url_params);
+        get->set_url(str_url);
+        get->set_proxy(m_proxy_path);
+        get->set_cert(m_cert_path);
+        get->set_cookie(m_cookie);
+        get->set_download_filepath(str_download_filepath);
+        get->set_callback(callback);
+        get->set_request_seq(seq);
+        get->go();
+        long httpcode = get->get_httpcode();
+        str_res_txt = get->get_res_txt();
+        delete get;
+
+        return httpcode;
     }
 
 
@@ -331,6 +580,7 @@ private:
     std::string m_host;
     std::string m_cert_path;
     std::string m_proxy_path;
+    std::string m_cookie;
     STRING_MAP m_basic_params;
     STRING_MAP m_basic_headers;
 
