@@ -11,7 +11,7 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.github.yutianzuo.curl"
+        applicationId "com.github.liyuzhao.curl"
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 1

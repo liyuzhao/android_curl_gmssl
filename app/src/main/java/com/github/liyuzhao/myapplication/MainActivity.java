@@ -1,4 +1,4 @@
-package com.github.yutianzuo.myapplication;
+package com.github.liyuzhao.myapplication;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import com.easemob.emssl.EMHttpManager;
 import com.easemob.emssl.EMRequestManager;
 import com.easemob.emssl.MPNetManager;
 import com.easemob.emssl.utils.EMMisc;
+import com.github.liyuzhao.curl.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView mTextView;
@@ -85,14 +86,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public EMRequestManager getRequest() {
         EMRequestManager requestManager = EMHttpManager.getInstance().createRequest();
-        requestManager.setHost("https://182.92.201.164");
+        requestManager.setHost("https://www.baidu.com");
         requestManager.setCertPath(EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME);
         return requestManager;
     }
 
     public EMRequestManager getNginxRequest() {
         EMRequestManager requestManager = EMHttpManager.getInstance().createRequest();
-        requestManager.setHost("https://182.92.201.164");
+        requestManager.setHost("https://www.baidu.com");
         requestManager.setCertPath(EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME);
         return requestManager;
     }

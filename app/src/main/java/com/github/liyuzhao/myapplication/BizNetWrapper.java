@@ -1,14 +1,4 @@
-package com.github.yutianzuo.myapplication;
-
-import android.content.Context;
-
-import com.easemob.emssl.EMHttpCallback;
-import com.easemob.emssl.EMHttpManager;
-import com.easemob.emssl.EMRequestManager;
-import com.easemob.emssl.utils.EMMisc;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.github.liyuzhao.myapplication;
 
 public class BizNetWrapper {
 //    EMRequestManager mRequest1;
