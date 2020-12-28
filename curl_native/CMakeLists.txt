@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.4.1)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/main/cpp/include)
 INCLUDE_DIRECTORIES(../curl_native/src/main/cpp/include/curl)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fexceptions")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -march=armv7-a")
 
 

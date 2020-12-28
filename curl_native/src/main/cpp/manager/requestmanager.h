@@ -44,7 +44,6 @@ public:
         }
     }
 
-
     /////////////////////////////////////////////////////////
     void add_basic_url_params(const std::string &param_key, const std::string &param_value)
     {
@@ -83,7 +82,7 @@ public:
         HttpGetRequest *get = new HttpGetRequest();
         inner_add_headers(get, headers);
         std::string str_url = get_url(str_path, url_params);
-        get->set_url(str_url);
+        get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
         get->set_cookie(m_cookie);
@@ -104,7 +103,7 @@ public:
         HttpGetRequest *get = new HttpGetRequest();
         inner_add_headers(get, headers);
         std::string str_url = get_url(str_path, url_params);
-        get->set_url(str_url);
+        get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
         get->set_cookie(m_cookie);
@@ -123,7 +122,7 @@ public:
         HttpPostFormDataRequest *post = new HttpPostFormDataRequest(true);
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url);
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -157,7 +156,7 @@ public:
         HttpPostFormDataRequest *post = new HttpPostFormDataRequest(true);
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url);
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -193,7 +192,7 @@ public:
         HttpPostFormDataRequest *post = new HttpPostFormDataRequest(false);
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url);
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -216,7 +215,7 @@ public:
         HttpPostFormDataRequest *post = new HttpPostFormDataRequest(false);
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url);
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -237,7 +236,7 @@ public:
         HttpPostFormDataRequest *post = new HttpPostFormDataRequest(false);
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url);
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -262,7 +261,7 @@ public:
         HttpPostFileRequest *post = new HttpPostFileRequest();
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url); //should be invoke first
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls); //should be invoke first
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -310,7 +309,7 @@ public:
         HttpPostFileRequest *post = new HttpPostFileRequest();
         inner_add_headers(post, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        post->set_url(str_url); //should be invoke first
+        post->set_url(str_url, m_skip_ssl, m_use_gmtls); //should be invoke first
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
         post->set_cookie(m_cookie);
@@ -358,7 +357,7 @@ public:
         HttpPutJsonRequest *put = new HttpPutJsonRequest();
         inner_add_headers(put, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        put->set_url(str_url);
+        put->set_url(str_url, m_skip_ssl, m_use_gmtls);
         put->set_proxy(m_proxy_path);
         put->set_json(json);
         put->set_cert(m_cert_path);
@@ -380,7 +379,7 @@ public:
         HttpPutJsonRequest *put = new HttpPutJsonRequest();
         inner_add_headers(put, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        put->set_url(str_url);
+        put->set_url(str_url, m_skip_ssl, m_use_gmtls);
         put->set_proxy(m_proxy_path);
         put->set_json(json);
         put->set_cert(m_cert_path);
@@ -403,7 +402,7 @@ public:
         HttpDeleteRequest *del = new HttpDeleteRequest();
         inner_add_headers(del, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        del->set_url(str_url);
+        del->set_url(str_url, m_skip_ssl, m_use_gmtls);
         del->set_proxy(m_proxy_path);
         del->set_json(json);
         del->set_cert(m_cert_path);
@@ -425,7 +424,7 @@ public:
         HttpDeleteRequest *del = new HttpDeleteRequest();
         inner_add_headers(del, headers);
         std::string str_url = get_url(str_path, STRING_MAP());
-        del->set_url(str_url);
+        del->set_url(str_url, m_skip_ssl, m_use_gmtls);
         del->set_proxy(m_proxy_path);
         del->set_json(json);
         del->set_cert(m_cert_path);
@@ -448,7 +447,7 @@ public:
         HttpGetDownloadRequest *get = new HttpGetDownloadRequest();
         inner_add_headers(get, headers);
         std::string str_url = get_url(str_path, url_params);
-        get->set_url(str_url);
+        get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
         get->set_cookie(m_cookie);
@@ -472,7 +471,7 @@ public:
         HttpGetDownloadRequest *get = new HttpGetDownloadRequest();
         inner_add_headers(get, headers);
         std::string str_url = get_url(str_path, url_params);
-        get->set_url(str_url);
+        get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
         get->set_cookie(m_cookie);
@@ -581,6 +580,8 @@ private:
     std::string m_cert_path;
     std::string m_proxy_path;
     std::string m_cookie;
+    bool m_skip_ssl = false;
+    bool m_use_gmtls = true;
     STRING_MAP m_basic_params;
     STRING_MAP m_basic_headers;
 

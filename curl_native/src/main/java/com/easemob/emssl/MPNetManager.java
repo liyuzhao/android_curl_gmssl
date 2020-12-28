@@ -67,6 +67,12 @@ public class MPNetManager {
             this.request.setCookie(cookie);
             return this;
         }
+
+        public Builder setCertPath(String certPath) {
+            this.request.setCertPath(certPath);
+            return this;
+        }
+
 //        private Builder with(EMRequestManager request) {
 //            this.request = request;
 //            return this;

@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public EMRequestManager getRequest() {
         EMRequestManager requestManager = EMHttpManager.getInstance().createRequest();
-        requestManager.setHost("https://www.baidu.com");
+        requestManager.setHost("https://oa-mp-b.easemob.com/");
         requestManager.setCertPath(EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME);
         return requestManager;
     }

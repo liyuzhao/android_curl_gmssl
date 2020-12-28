@@ -13,6 +13,10 @@ class EMJniCurl {
 
     public static native void unInit();
 
+    public static native void setSkipSSL(boolean skipSSL);
+
+    public static native void setUseGmTLS( boolean useGmTLS);
+
     public static native void addBasicHeader(String strHash, String strKey, String strValue);
 
     public static native void addBasicURLParam(String strHash, String strKey, String strValue);

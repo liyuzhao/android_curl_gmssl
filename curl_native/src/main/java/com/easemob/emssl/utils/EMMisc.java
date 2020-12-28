@@ -17,10 +17,10 @@ public class EMMisc {
 
     public static void copyCertFile(final Context context) {
         final String str_path = getAppDir(context) + CERT_NAME;
-        File cert_file = new File(str_path);
-        if (cert_file.isFile()) {
-           return;
-        }
+//        File cert_file = new File(str_path);
+//        if (cert_file.isFile()) {
+//           return;
+//        }
         new Thread(new Runnable() {
             @Override
             public void run() {

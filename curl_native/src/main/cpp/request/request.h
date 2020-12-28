@@ -104,7 +104,7 @@ public:
         m_headers = curl_slist_append(m_headers, str_header.c_str());
     }
 
-    void set_url(const std::string &str_url, bool skip_ssl = true)
+    void set_url(const std::string &str_url, bool skip_ssl = false, bool use_gmtls = false)
     {
         if (!is_valid())
         {
@@ -121,7 +121,7 @@ public:
         }
         else
         {
-//            curl_easy_setopt(m_curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
             if (!m_cert_path.empty())
             {
                 LOGE("m_cert_path:%s", m_cert_path.c_str());
@@ -140,6 +140,9 @@ public:
         curl_easy_setopt(m_curl_handle, CURLOPT_WRITEDATA, (void *) &m_buffer);
         curl_easy_setopt(m_curl_handle, CURLOPT_FOLLOWLOCATION, 1L); //follow location. e.g. 301/302/203
 
+        if(use_gmtls) {
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLVERSION,  CURL_SSLVERSION_GMTLS);
+        }
 //        m_headers = curl_slist_append(m_headers, "Accept: text/html;charset=UTF-8");
 //        m_headers = curl_slist_append(m_headers, "Accept-Charset: ISO-8859-1");
 
@@ -173,6 +176,7 @@ public:
         m_cert_path = cert_path;
         if (!m_cert_path.empty())
         {
+            LOGE("###set_cert->%s", cert_path.c_str());
             curl_easy_setopt(m_curl_handle, CURLOPT_CAINFO, m_cert_path.c_str());
         }
     }

@@ -307,6 +307,20 @@ Java_com_easemob_emssl_EMJniCurl_setCookie
     }
 }
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_easemob_emssl_EMJniCurl_setSkipSSL(JNIEnv *env, jclass clazz, jboolean skip_ssl) {
+
+
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_easemob_emssl_EMJniCurl_setUseGmTLS(JNIEnv *env, jclass clazz, jboolean use_gm_tls) {
+
+}
+
+
 
 using JNIMAP = std::map<std::string, std::string>;
 
