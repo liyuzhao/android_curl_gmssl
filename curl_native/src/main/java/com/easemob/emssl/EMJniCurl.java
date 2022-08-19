@@ -6,7 +6,12 @@ import java.util.List;
 
 class EMJniCurl {
     static {
-        System.loadLibrary("emssl");
+        try {
+            System.loadLibrary("emssl");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static native void init(int threadPoolSize, Object callBack);

@@ -10,8 +10,6 @@
 #include "../android_utils.h"
 #include <sys/stat.h>
 
-
-
 typedef void(*CallBackFunc)(int, const std::string &, float, size_t, int, void *);
 
 typedef void(*CookieCallBackFunc)(int, const std::string &, size_t, void *);

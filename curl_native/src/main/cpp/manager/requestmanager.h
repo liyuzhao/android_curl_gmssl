@@ -603,7 +603,7 @@ private:
     std::string m_proxy_path;
     std::string m_cookie;
     bool m_skip_ssl = false;
-    bool m_use_gmtls = true;
+    bool m_use_gmtls = false;
     STRING_MAP m_basic_params;
     STRING_MAP m_basic_headers;
 

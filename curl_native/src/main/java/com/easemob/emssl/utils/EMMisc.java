@@ -42,7 +42,6 @@ public class EMMisc {
                         fs.write(buffer, 0, byteread);
                     }
                 } catch (Throwable e) {
-                    e.printStackTrace();
                 } finally {
                     closeStream(is);
                     closeStream(fs);
@@ -83,7 +82,6 @@ public class EMMisc {
             try {
                 fHide.createNewFile();
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         return dir;

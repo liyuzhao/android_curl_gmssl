@@ -11,3 +11,4 @@
 /captures
 .externalNativeBuild
 /app/release/
+curl_native/.cxx

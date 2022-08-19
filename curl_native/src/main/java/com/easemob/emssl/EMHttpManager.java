@@ -16,9 +16,9 @@ public class EMHttpManager {
     public static final int RESULT_UPLOAD_PROGRESS = 2;
 
     private List<EMRequestManager> mRequest = new ArrayList<>();
-    private SparseArray<EMHttpCallback> mCallbackMap = new SparseArray<>();
+    private final SparseArray<EMHttpCallback> mCallbackMap = new SparseArray<>();
 
-    private SparseArray<EMCookieCallback> mCookieMap = new SparseArray<>();
+    private final SparseArray<EMCookieCallback> mCookieMap = new SparseArray<>();
 
     private static EMHttpManager sInstance = new EMHttpManager();
 
@@ -41,16 +41,22 @@ public class EMHttpManager {
 
     public EMRequestManager createRequest() {
         EMRequestManager request = new EMRequestManager();
-        mRequest.add(request);
+        synchronized (mRequest) {
+            mRequest.add(request);
+        }
         return request;
     }
 
     public void addCallback(int seq, EMHttpCallback callback) {
-        mCallbackMap.put(seq, callback);
+        synchronized (mCallbackMap) {
+            mCallbackMap.put(seq, callback);
+        }
     }
 
     public void addCookieCallback(int seq, EMCookieCallback callback) {
-        mCookieMap.put(seq, callback);
+        synchronized (mCookieMap) {
+            mCookieMap.put(seq, callback);
+        }
     }
 
     /**

@@ -1,3 +1,0 @@
-/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/release/x86/CMakeFiles/edit_cache.dir
-/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/release/x86/CMakeFiles/rebuild_cache.dir
-/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/release/x86/CMakeFiles/emssl.dir
