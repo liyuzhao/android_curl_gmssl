@@ -87,7 +87,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public EMRequestManager getRequest() {
         EMRequestManager requestManager = EMHttpManager.getInstance().createRequest();
         requestManager.setHost("https://oa-mp-b.easemob.com/");
-        requestManager.setCertPath(EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME);
+//        requestManager.setCertPath(EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME);
+//        requestManager.setCertPath("/data/media/0/emcurl/" + EMMisc.CERT_NAME);
+        requestManager.setCertPath("/storage/emulated/0/emcurl/cacert.pem");
+
+//        requestManager.setSSLCertPath(EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME_CLIENT_CER, EMMisc.getAppDir(this.getApplicationContext()) + EMMisc.CERT_NAME_CLIENT_KEY, "");
+        requestManager.setSSLCertPath("/sdcard/client.crt", "/sdcard/client.key", "");
+//        requestManager.setSSLCertPath("/storage/emulated/0/emcurl/testcert1.cer", "/storage/emulated/0/emcurl/testcert1.key", "");
+//        requestManager.setSSLCertPath("/sdcard/testcert1.cer", "/sdcard/testcert1.key", "");
+//        requestManager.setSSLCertPath("/data/media/0/emcurl/testcert1.cer", "/data/media/0/emcurl/testcert1.key", "");
+
         return requestManager;
     }
 

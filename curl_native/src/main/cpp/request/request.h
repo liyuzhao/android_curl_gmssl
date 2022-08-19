@@ -8,6 +8,8 @@
 #include "curl.h"
 #include <string>
 #include "../android_utils.h"
+#include <sys/stat.h>
+
 
 
 typedef void(*CallBackFunc)(int, const std::string &, float, size_t, int, void *);
@@ -141,6 +143,7 @@ public:
         curl_easy_setopt(m_curl_handle, CURLOPT_FOLLOWLOCATION, 1L); //follow location. e.g. 301/302/203
 
         if(use_gmtls) {
+            LOGE("use_gmtls");
             curl_easy_setopt(m_curl_handle, CURLOPT_SSLVERSION,  CURL_SSLVERSION_GMTLS);
         }
 //        m_headers = curl_slist_append(m_headers, "Accept: text/html;charset=UTF-8");
@@ -176,8 +179,23 @@ public:
         m_cert_path = cert_path;
         if (!m_cert_path.empty())
         {
-            LOGE("###set_cert->%s", cert_path.c_str());
+            LOGE("set_cert:%s\n", m_cert_path.c_str());
             curl_easy_setopt(m_curl_handle, CURLOPT_CAINFO, m_cert_path.c_str());
+        }
+    }
+
+    void set_ssl_cert(const std::string &ssl_cert_path, const std::string &ssl_key_path, const std::string &ssl_key_passwd) {
+        if (!ssl_cert_path.empty()) {
+            LOGE("set_ssl_cert-ssl_cert_path:%s, file is exists:%d\n", ssl_cert_path.c_str(), exists_test(ssl_cert_path));
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLCERT, ssl_cert_path.c_str());
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLCERTTYPE, "PEM");// 默认为PEM 也可为DER
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLCERTPASSWD, "");
+        }
+        if (!ssl_key_path.empty()) {
+            LOGE("set_ssl_cert-ssl_key_path:%s, file is exists:%d\n", ssl_key_path.c_str(), exists_test(ssl_key_path));
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLKEY, ssl_key_path.c_str());
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLKEYTYPE, "PEM"); // 默认为PEM 也可为DER
+            curl_easy_setopt(m_curl_handle, CURLOPT_SSLKEYPASSWD, "");
         }
     }
 
@@ -201,6 +219,10 @@ public:
 
     }
 
+    inline bool exists_test(const std::string &name) {
+        struct stat buffer;
+        return (stat (name.c_str(), &buffer) == 0);
+    }
 
     void set_callback(CallBack call_back)
     {
@@ -258,6 +280,7 @@ public:
             //callback err
             if (m_callback)
             {
+                LOGE("m_request_ret->%d, m_buffer->%s", ret, m_buffer.c_str());
                 m_callback(RESULT_TYPE_FAILED, m_buffer, 0.0f, m_request_seq, ret, nullptr);
             }
         }

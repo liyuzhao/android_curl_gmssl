@@ -3,6 +3,8 @@ package com.easemob.emssl;
 import android.content.Context;
 import android.util.Pair;
 
+import com.easemob.emssl.utils.EMMisc;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +75,10 @@ public class MPNetManager {
             return this;
         }
 
+        public Builder setSSLCertPath(String clientCertPath, String clientKeyPath, String pwd) {
+            this.request.setSSLCertPath(clientCertPath, clientKeyPath, pwd);
+            return this;
+        }
 //        private Builder with(EMRequestManager request) {
 //            this.request = request;
 //            return this;

@@ -14,13 +14,17 @@ import java.io.InputStream;
 public class EMMisc {
 
     public static final String CERT_NAME = "cacert.pem";
+    public static final String CERT_NAME_CLIENT_KEY = "client.key";
+    public static final String CERT_NAME_CLIENT_CER = "client.crt";
 
     public static void copyCertFile(final Context context) {
-        final String str_path = getAppDir(context) + CERT_NAME;
-//        File cert_file = new File(str_path);
-//        if (cert_file.isFile()) {
-//           return;
-//        }
+        copyFile(context, CERT_NAME);
+        copyFile(context, CERT_NAME_CLIENT_KEY);
+        copyFile(context, CERT_NAME_CLIENT_CER);
+    }
+
+    public static void copyFile(final Context context, final String certName) {
+        final String str_path = getAppDir(context) + certName;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -31,19 +35,22 @@ public class EMMisc {
                 FileOutputStream fs = null;
 
                 try {
-                    is = assetManager.open(CERT_NAME);
+                    is = assetManager.open(certName);
                     fs = new FileOutputStream((file_out));
                     byte[] buffer = new byte[2048];
                     while((byteread = is.read(buffer)) != -1) {
                         fs.write(buffer, 0, byteread);
                     }
                 } catch (Throwable e) {
+                    e.printStackTrace();
                 } finally {
                     closeStream(is);
                     closeStream(fs);
                 }
             }
         }).start();
+
+
     }
 
 
@@ -58,6 +65,9 @@ public class EMMisc {
     }
 
     public static String getAppDir(Context context) {
+
+//        return "/sdcard/";
+
         String dir = "";
         if(checkSDCard()) {
             dir = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -73,16 +83,17 @@ public class EMMisc {
             try {
                 fHide.createNewFile();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return dir;
     }
 
     private static boolean checkSDCard() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
+//        String state = Environment.getExternalStorageState();
+//        if (Environment.MEDIA_MOUNTED.equals(state)) {
+//            return true;
+//        }
         return false;
     }
 

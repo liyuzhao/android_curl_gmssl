@@ -55,6 +55,14 @@ JNIEXPORT void JNICALL Java_com_easemob_emssl_EMJniCurl_setHost
 JNIEXPORT void JNICALL Java_com_easemob_emssl_EMJniCurl_setCertPath
   (JNIEnv *, jclass, jstring, jstring);
 
+/**
+ * Class: com_easemob_emssl_EMJniCurl
+ * Method: setSSLCertPath
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_easemob_emssl_EMJniCurl_setSSLCertPath(JNIEnv *env, jclass clazz, jstring str_hash,
+                                                jstring str_sslcert_path, jstring str_sslkey_path,
+                                                jstring str_sslkey_passwd);
 /*
  * Class:     com_easemob_emssl_EMJniCurl
  * Method:    setCookie

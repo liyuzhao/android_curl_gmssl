@@ -25,6 +25,9 @@ class EMJniCurl {
 
     public static native void setCertPath(String strHash, String strCertPath);
 
+    // 设置双向认证client证书
+    public static native void setSSLCertPath(String strHash, String strSSLCertPath, String strSSLKeyPath, String strSSLKeyPasswd);
+
     public static native void setCookie(String strHash, String strCookie);
 
     public static native void setProxy(String strHash, String proxy);

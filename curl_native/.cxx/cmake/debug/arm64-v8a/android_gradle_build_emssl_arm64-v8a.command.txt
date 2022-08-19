@@ -1,0 +1,8 @@
+Executable : /Users/liyuzhao/others/tools/android-sdk-macosx/cmake/3.6.4111459/bin/cmake
+arguments : 
+--build
+/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a
+--target
+emssl
+jvmArgs : 
+

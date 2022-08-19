@@ -44,6 +44,11 @@ public class EMRequestManager {
         EMJniCurl.setCertPath(seqHash, strCert);
     }
 
+    public void setSSLCertPath(String strSSLCertPath, String strSSLKeyPath, String strSSLKeyPasswd) {
+        Log.e("EMRequestManager", "setSSLCertPath:" + strSSLCertPath + ",strSSLKeyPath:" + strSSLKeyPath + ",strSSLKeyPasswd:" + strSSLKeyPasswd);
+        EMJniCurl.setSSLCertPath(seqHash, strSSLCertPath, strSSLKeyPath, strSSLKeyPasswd);
+    }
+
     public void setCookie(String cookie) {
         EMJniCurl.setCookie(seqHash, cookie);
     }

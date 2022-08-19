@@ -253,6 +253,49 @@ Java_com_easemob_emssl_EMJniCurl_setCertPath
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_easemob_emssl_EMJniCurl_setSSLCertPath(JNIEnv *env, jclass type, jstring strHash_, jstring strSSLCertPath_, jstring strSSLKeyPath_,
+                                                jstring strSSLKeyPasswd_) {
+    const char *strHash = nullptr;
+    const char *strSSLCertPath = nullptr;
+    const char *strSSLKeyPath = nullptr;
+    const char *strSSLKeyPasswd = nullptr;
+
+    if (strHash_) {
+        strHash = env->GetStringUTFChars(strHash_, 0);
+    }
+    if (strSSLCertPath_) {
+        strSSLCertPath = env->GetStringUTFChars(strSSLCertPath_, 0);
+    }
+    if(strSSLKeyPath_) {
+        strSSLKeyPath = env->GetStringUTFChars(strSSLKeyPath_, 0);
+    }
+    if(strSSLKeyPasswd_) {
+        strSSLKeyPasswd = env->GetStringUTFChars(strSSLKeyPasswd_, 0);
+    }
+
+    if (strHash && strSSLCertPath && strSSLKeyPath && strSSLKeyPasswd) {
+        RequestManager *p = HttpManager::get_instance()->get_request_manager(strHash);
+        p->set_ssl_cert_path(strSSLCertPath, strSSLKeyPath, strSSLKeyPasswd);
+    }
+    if(strHash_ && strHash) {
+        env->ReleaseStringUTFChars(strHash_, strHash);
+    }
+    if(strSSLCertPath_ && strSSLCertPath) {
+        env->ReleaseStringUTFChars(strSSLCertPath_, strSSLCertPath);
+    }
+    if (strSSLKeyPath_ && strSSLKeyPath){
+        env->ReleaseStringUTFChars(strSSLKeyPath_, strSSLKeyPath);
+    }
+    if(strSSLKeyPasswd_ && strSSLKeyPasswd){
+        env->ReleaseStringUTFChars(strSSLKeyPasswd_, strSSLKeyPasswd);
+    }
+
+}
+//set_ssl_cert_path
+
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_easemob_emssl_EMJniCurl_setProxy
         (JNIEnv *env, jclass type, jstring strHash_, jstring proxy_) {
     const char *strHash = nullptr;

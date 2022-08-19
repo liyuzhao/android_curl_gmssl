@@ -65,6 +65,13 @@ public:
         m_cert_path = str_cert;
     }
 
+    // 设置双向认证 的client证书
+    void set_ssl_cert_path(const std::string &ssl_cert_path, const std::string &ssl_key_path, const std::string &ssl_key_passwd) {
+        m_ssl_cert_path = ssl_cert_path;
+        m_ssl_key_path = ssl_key_path;
+        m_ssl_key_passwd = ssl_key_passwd;
+    }
+
     void set_proxy_path(const std::string& str_proxy)
     {
         m_proxy_path = str_proxy;
@@ -85,6 +92,7 @@ public:
         get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
+        get->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         get->set_cookie(m_cookie);
         get->set_callback(call_back);
         get->set_request_seq(seq);
@@ -106,6 +114,7 @@ public:
         get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
+        get->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         get->set_cookie(m_cookie);
         get->go();
         long http_code = get->get_httpcode();
@@ -125,6 +134,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         std::string str_form;
@@ -159,6 +169,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         std::string str_form;
@@ -195,6 +206,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         post->set_postformdata(json);
@@ -218,6 +230,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         post->set_postformdata(json);
@@ -239,6 +252,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls);
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_postformdata(json);
         post->go();
@@ -264,6 +278,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls); //should be invoke first
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         if (str_filepath.size())
@@ -312,6 +327,7 @@ public:
         post->set_url(str_url, m_skip_ssl, m_use_gmtls); //should be invoke first
         post->set_proxy(m_proxy_path);
         post->set_cert(m_cert_path);
+        post->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         post->set_cookie(m_cookie);
         post->set_request_seq(seq);
         if (str_filepath.size())
@@ -361,6 +377,7 @@ public:
         put->set_proxy(m_proxy_path);
         put->set_json(json);
         put->set_cert(m_cert_path);
+        put->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         put->set_cookie(m_cookie);
         put->set_callback(callback);
         put->set_request_seq(seq);
@@ -383,6 +400,7 @@ public:
         put->set_proxy(m_proxy_path);
         put->set_json(json);
         put->set_cert(m_cert_path);
+        put->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         put->set_cookie(m_cookie);
         put->go();
         long httpcode = put->get_httpcode();
@@ -406,6 +424,7 @@ public:
         del->set_proxy(m_proxy_path);
         del->set_json(json);
         del->set_cert(m_cert_path);
+        del->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         del->set_cookie(m_cookie);
         del->set_callback(callback);
         del->set_request_seq(seq);
@@ -428,6 +447,7 @@ public:
         del->set_proxy(m_proxy_path);
         del->set_json(json);
         del->set_cert(m_cert_path);
+        del->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         del->set_cookie(m_cookie);
         del->go();
         long httpcode = del->get_httpcode();
@@ -450,6 +470,7 @@ public:
         get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
+        get->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         get->set_cookie(m_cookie);
         get->set_download_filepath(str_download_filepath);
         get->set_callback(callback);
@@ -474,6 +495,7 @@ public:
         get->set_url(str_url, m_skip_ssl, m_use_gmtls);
         get->set_proxy(m_proxy_path);
         get->set_cert(m_cert_path);
+        get->set_ssl_cert(m_ssl_cert_path, m_ssl_key_path, m_ssl_key_passwd);
         get->set_cookie(m_cookie);
         get->set_download_filepath(str_download_filepath);
         get->set_callback(callback);
@@ -584,6 +606,11 @@ private:
     bool m_use_gmtls = true;
     STRING_MAP m_basic_params;
     STRING_MAP m_basic_headers;
+
+    // 双向认证 添加
+    std::string m_ssl_cert_path;
+    std::string m_ssl_key_path;
+    std::string m_ssl_key_passwd;
 
     static stdx::ThreadPool *g_threadpool;
 

@@ -1,0 +1,74 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/Users/liyuzhao/sdk/oa-android",
+      "sdkFolder": "/Users/liyuzhao/others/tools/android-sdk-macosx",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "ideBuildTargetAbi": "arm64-v8a,armeabi-v7a,armeabi",
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/build/intermediates",
+      "gradleModulePathName": ":curl_native",
+      "moduleRootFolder": "/Users/liyuzhao/sdk/oa-android/curl_native",
+      "makeFile": "/Users/liyuzhao/sdk/oa-android/curl_native/CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "/Users/liyuzhao/sdk/oa-android/.cxx",
+      "cxxFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx",
+      "ndkFolder": "/Users/liyuzhao/others/tools/android-sdk-macosx/ndk-bundle",
+      "ndkVersion": "22.0.7026061",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [
+      "-DANDROID_STL\u003dc++_shared",
+      "-DCMAKE_BUILD_TYPE\u003dDebug"
+    ],
+    "cFlagList": [],
+    "cppFlagsList": [
+      "-std\u003dc++11"
+    ],
+    "variantName": "debug",
+    "soFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/build/intermediates/cmake/debug/lib",
+    "objFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/build/intermediates/cmake/debug/obj",
+    "jsonFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug",
+    "gradleBuildOutputFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug",
+    "isDebuggableEnabled": false,
+    "validAbiList": [
+      "ARM64_V8A",
+      "ARMEABI_V7A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARM64_V8A",
+  "abiPlatformVersion": 17,
+  "cxxBuildFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a",
+  "jsonFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a",
+  "objFolder": "/Users/liyuzhao/sdk/oa-android/curl_native/build/intermediates/cmake/debug/obj/arm64-v8a",
+  "buildCommandFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a/build_command.txt",
+  "buildOutputFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a/build_output.txt",
+  "modelOutputFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a/build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/CMakeLists.txt",
+    "toolchainWrapperFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/build_generation_state.json",
+    "cacheKeyFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/compiler_cache_key.json",
+    "compilerCacheUseFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/compiler_cache_use.json",
+    "compilerCacheWriteFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cxx/debug/arm64-v8a/compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a/json_generation_record.json",
+  "compileCommandsJsonFile": "/Users/liyuzhao/sdk/oa-android/curl_native/.cxx/cmake/debug/arm64-v8a/compile_commands.json"
+}
